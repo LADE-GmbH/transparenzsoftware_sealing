@@ -1,7 +1,6 @@
 package com.metabit.custom.safe.iip;
 
 import com.metabit.custom.safe.iip.shared.SharedConstants;
-import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.jce.ECNamedCurveTable;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -18,9 +17,9 @@ import java.security.*;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@Slf4j
 public class AlgorithmLookupTest
 {
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AlgorithmLookupTest.class);
     private static Provider securityProvider;
     
     @Test

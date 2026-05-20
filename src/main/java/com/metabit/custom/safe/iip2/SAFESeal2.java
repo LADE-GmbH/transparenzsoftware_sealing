@@ -139,9 +139,8 @@ public class SAFESeal2
             IllegalBlockSizeException, InvalidKeySpecException, BadPaddingException, IOException, ShortBufferException, InvalidAlgorithmParameterException
         {
         InternalTransportTuple itt;
-        // lacking a proper API, we do this the factual way:
-        final String description = senderKey.toString();
-        final int privateKeyLength = SharedCode.getRSAPrivateKeyLengthInBits(description);
+        // Use JCE API to determine key size (avoids relying on toString() format which varies by JDK version)
+        final int privateKeyLength = SharedCode.getRSAPrivateKeyLengthInBits(senderKey);
         switch (privateKeyLength)
             {
             case 1024:

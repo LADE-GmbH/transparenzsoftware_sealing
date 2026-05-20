@@ -43,7 +43,7 @@ class VerifyApiTest
                 "<?xml version=\"1.0\" encoding=\"utf-8\"?><values>" +
                 "<value transactionId=\"76007442\">" +
                 "<signedData format=\"ocmf\" encoding=\"plain\"><![CDATA[OCMF|{\"FV\":\"1.0\",\"GI\":\"LEM DCBM\",\"GS\":\"1242050810\",\"GV\":\"v1\",\"PG\":\"T61\",\"MV\":\"LEM\",\"MS\":\"1242050810\",\"MF\":\"MU-2.3.0.1_SU-0.1.3.0\",\"IS\":true,\"IL\":\"TRUSTED\",\"IF\":[\"RFID_NONE\",\"OCPP_RS_TLS\",\"ISO15118_NONE\",\"PLMN_NONE\"],\"IT\":\"NONE\",\"ID\":\"O-b9d89940be03-10802\",\"CT\":\"EVSEID\",\"CI\":\"FR*A23*E45B*78D\",\"RD\":[{\"TM\":\"2025-10-26T12:50:00,000+0100 R\",\"TX\":\"B\",\"RV\":1319.135,\"RI\":\"1-0:1.8.0\",\"RU\":\"kWh\",\"RT\":\"DC\",\"EF\":\"\",\"ST\":\"G\",\"UC\":{\"UN\":\"No_Comp\",\"UI\":0,\"UR\":0}},{\"RV\":7.641,\"RI\":\"1-0:2.8.0\",\"RU\":\"kWh\",\"ST\":\"G\"},{\"TM\":\"2025-10-26T13:06:07,000+0100 R\",\"TX\":\"E\",\"RV\":1328.281,\"RI\":\"1-0:1.8.0\",\"RU\":\"kWh\",\"ST\":\"G\"},{\"RV\":7.641,\"RI\":\"1-0:2.8.0\",\"RU\":\"kWh\",\"ST\":\"G\"}]}|{\"SA\":\"ECDSA-secp256r1-SHA256\",\"SD\":\"304502202FFD57E359C7470E8717FBBB0A5BCE0CCF96EC56268CC95B8862FE3E1CD07EA90221009DE6CF26F3D79411D083CD4BEE9715EE852E730DECFCD83036DF0DDF9EFBC0AD\"}]]></signedData>" +
-                "<publicKey encoding=\"plain\">MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEkHMaeos/DzzyiEI3lThC8rGWOTQE7cFIW2e05ceyw9W9WTShJIWs62jDQezHBod1w6lT2G1uTHD0rAWqdTMhHA==</publicKey>" +
+                "<publicKey encoding=\"base64\">MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEkHMaeos/DzzyiEI3lThC8rGWOTQE7cFIW2e05ceyw9W9WTShJIWs62jDQezHBod1w6lT2G1uTHD0rAWqdTMhHA==</publicKey>" +
                 "</value></values>";
 
         String body = "xmlText=" + url(xml);

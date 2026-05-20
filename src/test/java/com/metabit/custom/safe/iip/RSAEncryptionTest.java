@@ -3,7 +3,6 @@ package com.metabit.custom.safe.iip;
 
 import com.metabit.custom.safe.iip.shared.*;
 import com.metabit.custom.safe.safeseal.impl.CryptoFactoryImpl;
-import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Base64;
 import org.junit.jupiter.api.BeforeAll;
@@ -20,9 +19,9 @@ import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAKeyGenParameterSpec;
 
-@Slf4j
 public class RSAEncryptionTest
 {
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(RSAEncryptionTest.class);
     private static Provider      securityProvider;
     private static SecureRandom  rng;
     private CryptoFactory cf;

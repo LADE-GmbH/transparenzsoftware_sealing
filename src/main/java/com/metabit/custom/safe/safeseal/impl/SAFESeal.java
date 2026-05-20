@@ -16,6 +16,7 @@ import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
+import java.security.interfaces.RSAKey;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
@@ -160,14 +161,20 @@ public class SAFESeal {
 	    itt = new InternalTransportTuple(true); // ECDHE+AES...
 	    itt.setDiversification(uniqueID);
 	} else {
-	    // lacking a proper API, we do this the factual way:
-	    final String description = senderKey.toString();
-	    final Pattern keyLengthFromDescription = Pattern.compile(".+RSA private CRT key,\\s+(\\d{4})\\sbits(?m:$)");
-	    final Matcher matcher = keyLengthFromDescription.matcher(description);
-	    if (matcher.find() == false) {
-		throw new UnsupportedOperationException("could not determine key size");
+	    // Use the JCE API to determine key size — avoids relying on toString() format which varies by JDK version
+	    final int privateKeyLength;
+	    if (senderKey instanceof RSAKey) {
+		privateKeyLength = ((RSAKey) senderKey).getModulus().bitLength();
+	    } else {
+		// Fallback: parse toString() for older BC key implementations
+		final String description = senderKey.toString();
+		final Pattern keyLengthFromDescription = Pattern.compile(".+RSA private CRT key,\\s+(\\d{4})\\sbits(?m:$)");
+		final Matcher matcher = keyLengthFromDescription.matcher(description);
+		if (matcher.find() == false) {
+		    throw new UnsupportedOperationException("could not determine key size");
+		}
+		privateKeyLength = Integer.valueOf(matcher.group(1));
 	    }
-	    final int privateKeyLength = Integer.valueOf(matcher.group(1));
 	    switch (privateKeyLength) {
 	    case 1024:
 		asymmetricLayer = new RSAWithIntegrityPadding(cryptoFactory, AlgorithmSpecCollection.RSA1024);

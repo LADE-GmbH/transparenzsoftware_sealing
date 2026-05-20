@@ -3,7 +3,6 @@ package com.metabit.custom.safe.iip;
 import com.metabit.custom.safe.iip.shared.AlgorithmSpec;
 import com.metabit.custom.safe.iip.shared.SharedTestingCode;
 import com.metabit.custom.safe.safeseal.impl.CryptoFactoryImpl;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -37,11 +36,11 @@ import static com.metabit.custom.safe.iip.shared.SharedTestingCode.rsa_encrypt_b
  * @see {task MC-117}
  */
 
-@Slf4j
 @EnabledIfEnvironmentVariable(named = "statistics", matches = "true")
 // run only when specifically activated, not on maven test phase during regular builds
 public class AlgorithmDiffusionQuality_IIP
 {
+private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AlgorithmDiffusionQuality_IIP.class);
 // inner class for collecting and writing out the results
 class ADQData
 {

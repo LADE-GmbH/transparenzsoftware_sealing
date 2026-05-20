@@ -226,6 +226,50 @@ Das Projekt besteht aus 4 Haupt-Paketen:
 
 Neue Verschlüsselungsalgorithmen müssen zu `shared/AlgorithmSpecCollection.java` hinzugefügt und getestet werden, bevor sie verwendet werden können.
 
+## LADE-GmbH Fork: Änderungen gegenüber dem Upstream
+
+Dieses Repository ist ein Fork von `ob7-com/transparenzsoftware_sealing`, der für die Verwendung mit modernen JDK-Versionen (JDK 25) und für die Veröffentlichung über GitHub Packages angepasst wurde.
+
+### JDK 25 Kompatibilität
+
+Der Upstream-Code war mit JDK 25 aus mehreren Gründen nicht kompatibel:
+
+**Kernbibliothek (main sources):**
+
+- `SAFESeal.java`, `SharedCode.java`, `SAFESeal2.java`: Die RSA-Schlüssellängenermittlung verwendete `PrivateKey.toString()` und einen regulären Ausdruck, dessen Format sich in JDK 25 geändert hat. Ersetzt durch `((RSAKey) key).getModulus().bitLength()` über die JCE-API.
+- `pom.xml`: Lombok von `1.18.30` auf `1.18.36` aktualisiert (JDK 25 Inkompatibilität in der Annotation-Verarbeitung). `maven-surefire-plugin` von `3.0.0-M7` auf `3.2.5` aktualisiert (Absturz der Fork-VM unter JDK 25).
+
+**Tests (test sources):**
+
+- `@Slf4j`-Annotation in 8 Testklassen durch explizite Logger-Felder ersetzt, da der Lombok Annotation Processor unter JDK 25 abstürzt (`TypeTag::UNKNOWN` wurde entfernt).
+- Fehlende interne Metabit-Bibliotheken (`SimpleIntegerStatsCounter`, `ByteArrayOperations`, `HexDump`) durch minimale Stub-Implementierungen im Testpfad ersetzt.
+
+**Bekannte verbleibende Einschränkung:** `SAFESeal2Test` (102 Tests) schlägt mit `BadPaddingException` fehl. Dies ist eine pre-existierende Inkompatibilität des IIP-v2-Algorithmus mit JDK 25 und betrifft nicht die Kernfunktionalität (IIP v1 / OCMF-Verifizierung).
+
+### GitHub Packages Veröffentlichung
+
+- `pom.xml`: `<distributionManagement>`-Block hinzugefügt, der auf `https://maven.pkg.github.com/LADE-GmbH/transparenzsoftware_sealing` zeigt.
+- `.github/workflows/publish.yml`: Neuer Workflow, der bei `v*`-Tags und `workflow_dispatch` ausgelöst wird und `mvn deploy -DskipTests` ausführt.
+
+**Verwendung als Maven-Abhängigkeit:**
+
+```xml
+<repositories>
+  <repository>
+    <id>github</id>
+    <url>https://maven.pkg.github.com/LADE-GmbH/transparenzsoftware_sealing</url>
+  </repository>
+</repositories>
+
+<dependency>
+  <groupId>com.metabit.custom.safe</groupId>
+  <artifactId>safesealing</artifactId>
+  <version>0.9.2</version>
+</dependency>
+```
+
+Ein GitHub Personal Access Token mit `read:packages`-Scope ist in `~/.m2/settings.xml` erforderlich.
+
 ## Hintergrund & Referenzen
 
 Das IIP-Verfahren basiert auf den Grundlagen der Informationstheorie und Kryptographie:

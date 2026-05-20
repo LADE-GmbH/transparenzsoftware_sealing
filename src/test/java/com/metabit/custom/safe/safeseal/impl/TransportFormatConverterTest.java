@@ -3,7 +3,6 @@ package com.metabit.custom.safe.safeseal.impl;
 import com.metabit.custom.safe.iip.shared.SharedConstants;
 import com.metabit.custom.safe.safeseal.SAFESealRevealer;
 import com.metabit.custom.safe.safeseal.SAFESealSealer;
-import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.jce.ECNamedCurveTable;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.jce.spec.ECNamedCurveParameterSpec;
@@ -22,9 +21,9 @@ import java.security.spec.ECParameterSpec;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@Slf4j
 class TransportFormatConverterTest
 {
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TransportFormatConverterTest.class);
 
     private PrivateKey senderPrivateKey;
     private PublicKey senderPublicKey;

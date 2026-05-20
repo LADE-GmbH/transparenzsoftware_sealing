@@ -2,7 +2,6 @@ package com.metabit.custom.safe.safeseal;
 
 import com.metabit.custom.safe.iip.shared.SharedConstants;
 import com.metabit.custom.safe.iip.SharedTestMethods;
-import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.jce.ECNamedCurveTable;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.jce.spec.ECNamedCurveParameterSpec;
@@ -26,9 +25,9 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * this test performs some "test attacks" on
  */
-@Slf4j
 class AttackTest
 {
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AttackTest.class);
     private static SecureRandom rng;
     // these are the asymmetric key pairs; we consider them in place before the scheme is applied (precondition).
     private PrivateKey senderPrivateKey;

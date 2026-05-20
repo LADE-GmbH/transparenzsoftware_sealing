@@ -4,7 +4,6 @@ import com.metabit.custom.safe.iip.SharedTestMethods;
 import com.metabit.custom.safe.iip.shared.SharedTestingCode;
 import com.metabit.custom.safe.safeseal.impl.CryptoFactoryImpl;
 import com.metabit.custom.safe.safeseal.impl.CryptoSettingsStruct;
-import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.crypto.DataLengthException;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.jupiter.api.*;
@@ -16,9 +15,9 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@Slf4j
 public class IIP2AttackTest
 {
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(IIP2AttackTest.class);
 
     private static SecureRandom         rng;
     private static CryptoFactoryImpl    cf;

@@ -169,55 +169,67 @@ class VerifyMultipleTransactionsTest
 
     private static String extractJsonString(String json, String parentKey, String key)
     {
-        // Find the parent object and extract nested key
-        Pattern p = Pattern.compile(
-                "\"" + Pattern.quote(parentKey) + "\"\\s*:\\s*\\{([^}]+)\\}",
-                Pattern.DOTALL);
-        Matcher parentMatcher = p.matcher(json);
-        if (parentMatcher.find()) {
-            String parentContent = parentMatcher.group(1);
-            Pattern keyPattern = Pattern.compile(
-                    "\"" + Pattern.quote(key) + "\"\\s*:\\s*\"([^\"]+)\"");
-            Matcher keyMatcher = keyPattern.matcher(parentContent);
-            if (keyMatcher.find()) {
-                return keyMatcher.group(1);
-            }
-            // Try number format (without quotes)
-            Pattern numPattern = Pattern.compile(
-                    "\"" + Pattern.quote(key) + "\"\\s*:\\s*([0-9.]+)");
-            Matcher numMatcher = numPattern.matcher(parentContent);
-            if (numMatcher.find()) {
-                return numMatcher.group(1);
-            }
+        // Extract the full parent object content by counting braces (handles nested objects)
+        String parentContent = extractObjectContent(json, parentKey);
+        if (parentContent == null) return null;
+
+        Pattern keyPattern = Pattern.compile(
+                "\"" + Pattern.quote(key) + "\"\\s*:\\s*\"([^\"]+)\"");
+        Matcher keyMatcher = keyPattern.matcher(parentContent);
+        if (keyMatcher.find()) {
+            return keyMatcher.group(1);
+        }
+        // Try number format (without quotes)
+        Pattern numPattern = Pattern.compile(
+                "\"" + Pattern.quote(key) + "\"\\s*:\\s*([0-9.]+)");
+        Matcher numMatcher = numPattern.matcher(parentContent);
+        if (numMatcher.find()) {
+            return numMatcher.group(1);
         }
         return null;
     }
 
     private static String extractNestedJsonString(String json, String parentKey, String nestedKey, String key)
     {
-        // Find nested object: parentKey -> nestedKey -> key
-        Pattern p = Pattern.compile(
-                "\"" + Pattern.quote(parentKey) + "\"\\s*:\\s*\\{.*?\"" + Pattern.quote(nestedKey) + 
-                "\"\\s*:\\s*\\{([^}]+)\\}",
-                Pattern.DOTALL);
-        Matcher parentMatcher = p.matcher(json);
-        if (parentMatcher.find()) {
-            String nestedContent = parentMatcher.group(1);
-            Pattern keyPattern = Pattern.compile(
-                    "\"" + Pattern.quote(key) + "\"\\s*:\\s*\"([^\"]+)\"");
-            Matcher keyMatcher = keyPattern.matcher(nestedContent);
-            if (keyMatcher.find()) {
-                return keyMatcher.group(1);
-            }
-            // Try number format (without quotes)
-            Pattern numPattern = Pattern.compile(
-                    "\"" + Pattern.quote(key) + "\"\\s*:\\s*([0-9.]+)");
-            Matcher numMatcher = numPattern.matcher(nestedContent);
-            if (numMatcher.find()) {
-                return numMatcher.group(1);
-            }
+        // Extract parent object, then nested object within it
+        String parentContent = extractObjectContent(json, parentKey);
+        if (parentContent == null) return null;
+        String nestedContent = extractObjectContent(parentContent, nestedKey);
+        if (nestedContent == null) return null;
+
+        Pattern keyPattern = Pattern.compile(
+                "\"" + Pattern.quote(key) + "\"\\s*:\\s*\"([^\"]+)\"");
+        Matcher keyMatcher = keyPattern.matcher(nestedContent);
+        if (keyMatcher.find()) {
+            return keyMatcher.group(1);
+        }
+        // Try number format (without quotes)
+        Pattern numPattern = Pattern.compile(
+                "\"" + Pattern.quote(key) + "\"\\s*:\\s*([0-9.]+)");
+        Matcher numMatcher = numPattern.matcher(nestedContent);
+        if (numMatcher.find()) {
+            return numMatcher.group(1);
         }
         return null;
+    }
+
+    /** Extract the full content of a JSON object identified by its key, handling nested braces. */
+    private static String extractObjectContent(String json, String key)
+    {
+        Pattern p = Pattern.compile("\"" + Pattern.quote(key) + "\"\\s*:\\s*\\{", Pattern.DOTALL);
+        Matcher m = p.matcher(json);
+        if (!m.find()) return null;
+        int start = m.end(); // position after the opening '{'
+        int depth = 1;
+        int i = start;
+        while (i < json.length() && depth > 0) {
+            char c = json.charAt(i);
+            if (c == '{') depth++;
+            else if (c == '}') depth--;
+            i++;
+        }
+        if (depth != 0) return null;
+        return json.substring(start, i - 1); // content between outermost { }
     }
 
     private static String readTestResource(String resourcePath) throws IOException

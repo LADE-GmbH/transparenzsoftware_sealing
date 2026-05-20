@@ -9,6 +9,7 @@ import com.metabit.custom.safe.safeseal.impl.CryptoSettingsStruct;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.security.interfaces.RSAKey;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,6 +47,18 @@ public class SharedCode
             throw new UnsupportedOperationException("could not determine key size");
         int privateKeyLength = Integer.valueOf(matcher.group(1));
         return privateKeyLength;
+        }
+
+    /**
+     * Determine RSA private key length in bits using the JCE API.
+     * Preferred over the toString()-parsing variant, which is JDK-version-dependent.
+     */
+    static int getRSAPrivateKeyLengthInBits(java.security.PrivateKey key)
+        {
+        if (key instanceof RSAKey)
+            return ((RSAKey) key).getModulus().bitLength();
+        // Fallback for older BC key implementations
+        return getRSAPrivateKeyLengthInBits(key.toString());
         }
 
     public void checks(final CryptoSettingsStruct css)
