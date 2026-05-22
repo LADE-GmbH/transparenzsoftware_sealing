@@ -1,0 +1,6 @@
+jdk:
+  - openjdk17
+before_install:
+  - sudo apt-get install -y gcc g++ make
+install:
+  - mvn install -DskipTests -Dmaven.javadoc.skip=true
