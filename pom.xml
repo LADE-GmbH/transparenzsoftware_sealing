@@ -3,10 +3,10 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.github.LADE-GmbH.transparenzsoftware_sealing</groupId>
-	<artifactId>safesealing</artifactId>
+	<groupId>com.github.LADE-GmbH</groupId>
+	<artifactId>transparenzsoftware_sealing</artifactId>
 	<packaging>jar</packaging>
-	<version>0.9.2-lade-1</version>
+	<version>0.9.2-lade-2</version>
 	<name>SAFEevSealing</name>
 
 	<licenses>
